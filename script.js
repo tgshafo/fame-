@@ -94,7 +94,7 @@ const members = [
         nickname: "Илюша Психопатов",
         username: "@ownerTwilight",
         category: "Медийка",
-        role: "Средний фейм",
+        role: "Медийка",
         description: "был в вк км 2017-2020 с другой лики",
         avatar: "img/avatar5.png",
         verified: true,
