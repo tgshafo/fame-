@@ -391,7 +391,119 @@
             </div>
         </div>
     </div>
+    </div>
+</div>
 
+<!-- Модальное окно авторизации -->
+<div class="modal" id="auth-modal">
+    <div class="modal-content neon-flow" style="max-width: 400px;">
+        <div class="modal-header">
+            <h2 class="text-neon-flow"><i class="fas fa-sign-in-alt"></i> Вход / Регистрация</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Вход</button>
+            <button class="auth-tab" data-tab="register">Регистрация</button>
+        </div>
+        
+        <div class="auth-content">
+            <div class="tab-content active" id="login-tab">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email:</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Пароль:</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="action-btn">Войти</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="register-tab">
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-email">Email:</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Пароль:</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password2">Повторите пароль:</label>
+                        <input type="password" id="register-password2" required>
+                    </div>
+                    <button type="submit" class="action-btn">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="auth-links">
+            <button class="text-btn" id="forgot-password">Забыли пароль?</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно заявки -->
+<div class="modal" id="application-modal">
+    <div class="modal-content neon-flow" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2 class="text-neon-flow"><i class="fas fa-user-plus"></i> Заявка на вступление</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <form id="application-form">
+            <div class="form-group">
+                <label for="app-avatar">Ссылка на аватар (URL):</label>
+                <input type="url" id="app-avatar" required placeholder="https://example.com/avatar.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label for="app-nickname">Никнейм:</label>
+                <input type="text" id="app-nickname" required maxlength="50">
+            </div>
+            
+            <div class="form-group">
+                <label for="app-username">Юзернейм (@username):</label>
+                <input type="text" id="app-username" required placeholder="@username">
+            </div>
+            
+            <div class="form-group">
+                <label for="app-project">Проект (ссылка):</label>
+                <input type="url" id="app-project" placeholder="https://t.me/yourproject">
+            </div>
+            
+            <div class="form-group">
+                <label>Дополнительные ссылки:</label>
+                <div id="extra-links-container">
+                    <div class="link-input">
+                        <input type="url" class="extra-link" placeholder="https://...">
+                        <button type="button" class="remove-link">×</button>
+                    </div>
+                </div>
+                <button type="button" class="action-btn" id="add-link-btn">+ Добавить ссылку</button>
+                <small>Максимум 10 ссылок</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="app-description">Описание (до 300 слов):</label>
+                <textarea id="app-description" rows="4" maxlength="3000" placeholder="Расскажите о себе..."></textarea>
+                <div class="char-count">Осталось символов: <span id="char-remaining">3000</span></div>
+            </div>
+            
+            <button type="submit" class="action-btn" style="width:100%;">
+                <i class="fas fa-paper-plane"></i> Отправить заявку
+            </button>
+        </form>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
     <script src="script.js"></script>
 </body>
 </html>
