@@ -19,29 +19,52 @@ document.addEventListener('DOMContentLoaded', function() {
     initAllAvatars();
     generateBgGrid();
     
-    // Авторизация и заявки
-    initAuth();
-    initApplicationForm();
-    checkAuth();
-});
-
-// Инициализация авторизации
+ // Инициализация авторизации
 function initAuth() {
+    console.log('Инициализация авторизации...');
+    
+    // Кнопка входа
     const loginBtn = document.getElementById('login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Клик по кнопке входа');
+            openModal('auth-modal');
+            
+            // Активируем первую вкладку
+            setTimeout(() => {
+                const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
+                if (loginTab) loginTab.click();
+            }, 100);
+        });
+    }
+    
+    // Кнопка заявки
     const appBtn = document.getElementById('application-btn');
-    const adminBtn = document.getElementById('admin-btn');
-    
-    if (loginBtn) { 
-        loginBtn.addEventListener('click', () => openModal('auth-modal'));
-    }
-    
     if (appBtn) {
-        appBtn.addEventListener('click', () => openModal('application-modal'));
+        appBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openModal('application-modal');
+        });
     }
     
-    if (adminBtn) {
-        adminBtn.addEventListener('click', () => {
-            window.open('admin.html', '_blank');
+    // Инициализация вкладок авторизации
+    const authTabs = document.querySelectorAll('.auth-tab');
+    if (authTabs.length > 0) {
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                
+                // Обновляем активные вкладки
+                authTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Показываем нужный контент
+                document.querySelectorAll('#auth-modal .tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
         });
     }
     
@@ -50,37 +73,34 @@ function initAuth() {
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'login',
-                    email: email,
-                    password: password
-                })
-            });
+            if (!email || !password) {
+                alert('Заполните все поля');
+                return;
+            }
             
-            const result = await response.json();
+            console.log('Попытка входа:', email);
             
-            if (result.success) {
-                localStorage.setItem('fame_token', result.token);
+            // Имитация входа (замените на реальный API)
+            if (email && password) {
+                localStorage.setItem('fame_token', 'demo_token_' + Date.now());
                 localStorage.setItem('fame_email', email);
-                localStorage.setItem('fame_role', result.role || 'user');
+                localStorage.setItem('fame_role', 'user');
                 
                 currentUser = {
                     email: email,
-                    token: result.token,
-                    role: result.role
+                    token: localStorage.getItem('fame_token'),
+                    role: 'user'
                 };
                 
-                alert('Успешный вход!');
+                alert('Демо-вход успешен! В реальной версии будет работа с API');
                 closeModal(document.getElementById('auth-modal'));
                 updateAuthUI();
-            } else {
-                alert('Ошибка: ' + result.error);
+                loginForm.reset();
             }
         });
     }
@@ -90,40 +110,134 @@ function initAuth() {
     if (registerForm) {
         registerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const password2 = document.getElementById('register-password2').value;
+            
+            if (!email || !password || !password2) {
+                alert('Заполните все поля');
+                return;
+            }
             
             if (password !== password2) {
                 alert('Пароли не совпадают!');
                 return;
             }
             
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'register',
+            console.log('Попытка регистрации:', email);
+            
+            // Имитация регистрации (замените на реальный API)
+            if (email && password) {
+                localStorage.setItem('fame_token', 'demo_token_' + Date.now());
+                localStorage.setItem('fame_email', email);
+                localStorage.setItem('fame_role', 'user');
+                
+                currentUser = {
                     email: email,
-                    password: password
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                alert('Регистрация успешна! Теперь войдите.');
-                document.querySelectorAll('.auth-tab').forEach(tab => {
-                    tab.classList.remove('active');
-                    if (tab.dataset.tab === 'login') {
-                        tab.classList.add('active');
-                    }
-                });
-            } else {
-                alert('Ошибка: ' + result.error);
+                    token: localStorage.getItem('fame_token'),
+                    role: 'user'
+                };
+                
+                alert('Демо-регистрация успешна! В реальной версии будет работа с API');
+                closeModal(document.getElementById('auth-modal'));
+                updateAuthUI();
+                registerForm.reset();
+                
+                // Переключаем на вкладку входа
+                const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
+                if (loginTab) loginTab.click();
             }
         });
     }
+    
+    // Забыл пароль
+    const forgotBtn = document.getElementById('forgot-password');
+    if (forgotBtn) {
+        forgotBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            alert('Свяжитесь с владельцем: @nothevo в Telegram');
+        });
+    }
+}
+
+// Инициализация формы заявки
+function initApplicationForm() {
+    const form = document.getElementById('application-form');
+    const descTextarea = document.getElementById('app-description');
+    const charRemaining = document.getElementById('char-remaining');
+    const addLinkBtn = document.getElementById('add-link-btn');
+    
+    if (descTextarea && charRemaining) {
+        descTextarea.addEventListener('input', function() {
+            const remaining = 3000 - this.value.length;
+            charRemaining.textContent = remaining;
+        });
+    }
+    
+    if (addLinkBtn) {
+        addLinkBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            addLinkField();
+        });
+    }
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!currentUser) {
+                alert('Сначала войдите!');
+                openModal('auth-modal');
+                return;
+            }
+            
+            const avatar = document.getElementById('app-avatar').value;
+            const nickname = document.getElementById('app-nickname').value;
+            const username = document.getElementById('app-username').value;
+            
+            if (!avatar || !nickname || !username) {
+                alert('Заполните обязательные поля: аватар, никнейм и юзернейм');
+                return;
+            }
+            
+            console.log('Отправка заявки:', {nickname, username});
+            
+            // Имитация отправки заявки
+            alert('Заявка отправлена в демо-режиме! В реальной версии будет отправка на сервер');
+            closeModal(document.getElementById('application-modal'));
+            form.reset();
+        });
+    }
+}
+
+// Функции для ссылок
+function addLinkField() {
+    const container = document.getElementById('extra-links-container');
+    const currentCount = container.querySelectorAll('.link-input').length;
+    
+    if (currentCount >= 10) {
+        alert('Максимум 10 ссылок!');
+        return;
+    }
+    
+    const div = document.createElement('div');
+    div.className = 'link-input';
+    div.innerHTML = `
+        <input type="url" class="extra-link" placeholder="https://...">
+        <button type="button" class="remove-link">×</button>
+    `;
+    
+    const removeBtn = div.querySelector('.remove-link');
+    removeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        div.remove();
+    });
+    
+    container.appendChild(div);
+} 
     
     // Забыл пароль
     const forgotBtn = document.getElementById('forgot-password');
